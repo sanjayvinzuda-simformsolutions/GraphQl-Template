@@ -22,6 +22,10 @@ module Types
 
     field :posts, [Types::PostType], null: false
 
+    # To retrive a specific record of post
+    field :find_post, Types::PostType, null: false do
+      argument :id, ID, required: true
+    end
 
     def users
       User.all
@@ -39,6 +43,12 @@ module Types
 
     def posts
       Post.all
+    end
+
+    def find_post(id:)
+      post = Post.find(id)
+        rescue ActiveRecord::RecordNotFound => e
+          raise GraphQL::ExecutionError.new(e.message)
     end
 
   end
