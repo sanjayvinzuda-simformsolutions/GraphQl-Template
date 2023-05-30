@@ -4,8 +4,6 @@ module Types
     include GraphQL::Types::Relay::HasNodeField
     include GraphQL::Types::Relay::HasNodesField
 
-    # Add root-level fields here.
-    # They will be entry points for queries on your schema.
 
     # Here we are retrieving 
     field :users, [Types::UserType], null: false
@@ -26,6 +24,17 @@ module Types
     field :find_post, Types::PostType, null: false do
       argument :id, ID, required: true
     end
+
+    # Retrieve all the comments here 
+    field :comments, [Types::CommentType], null: false
+
+    # retrieve a particular comment 
+    field :find_comment, Types::CommentType, null: false do
+      argument :id, ID, required: true
+    end
+
+    # comment counts
+    field :comment_count, Int
 
     def users
       User.all
@@ -49,6 +58,20 @@ module Types
       post = Post.find(id)
         rescue ActiveRecord::RecordNotFound => e
           raise GraphQL::ExecutionError.new(e.message)
+    end
+
+    def comments
+      Comment.all
+    end
+
+    def find_comment(id:)
+        comment = Comment.find(id)
+        rescue ActiveRecord::RecordNotFound => e
+          raise GraphQL::ExecutionError.new(e.message)
+    end
+
+    def comment_count
+      Comment.count
     end
 
   end
