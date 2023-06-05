@@ -36,6 +36,12 @@ module Types
     # comment counts
     field :comment_count, Int
 
+    # user resolver here for calling it
+    field :resolver_call, resolver: Resolvers::CountsResolver
+
+    # create user using cusotm resolver
+    field :craete_user, resolver: Resolvers::UsercreateResolver
+
     def users
       User.all
     end
